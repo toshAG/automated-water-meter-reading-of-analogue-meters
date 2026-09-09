@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Analog Meter Reader
+Comment=Automated water meter reading using AI
+Exec=/home/pi/Desktop/projectwork/launch_meter_reader.sh
+Icon=/home/pi/Desktop/projectwork/meter_reader_icon.png
+Terminal=true
+Categories=Utility;
