@@ -1,51 +1,76 @@
 # Raspberry Pi 4 Model B Deployment
 
-This directory contains the Raspberry Pi 4 Model B implementation of the
-automated analogue water-meter reading system.
+This directory contains the Raspberry Pi 4 Model B deployment of the
+automated water meter reading system. It brings together image
+acquisition, calibration, YOLOv10 detection, CNN-based recognition,
+pointer reading, reading synthesis, and the graphical user interface.
 
-The deployment integrates image acquisition, camera calibration, YOLOv10
-meter and digit detection, CNN-based digit recognition, pointer-sector
-classification, reading synthesis, and a graphical user interface (GUI).
-
-## 1. Deployment Platform
+## Deployment Platform
 
 - **Hardware:** Raspberry Pi 4 Model B
 - **Operating System:** Raspberry Pi OS
 - **Camera:** Raspberry Pi-compatible camera
 - **Programming:** Python 3
-- **Meter Detection:** YOLOv10
-- **Digit Recognition:** CNN
-- **Pointer Classification:** CNN
-- **Deployment Models:** PyTorch / ONNX
+- **Detection:** YOLOv10
+- **Recognition:** CNN-based digit and pointer classification
+- **Deployment formats:** PyTorch and ONNX
 - **Interface:** Desktop GUI
 
-## 2. System Processing Pipeline
+## System Architecture and Workflow
 
-The deployed system processes an analogue water-meter image through the
-following stages:
+The complete deployment workflow is illustrated below. The system
+captures an image of the analogue water meter, performs calibration
+and preprocessing, detects the meter region, and then processes the
+odometer and pointer through separate machine-learning branches.
+Their outputs are combined to produce the final meter reading.
 
-```text
-Camera / Image Input
-        ↓
-Calibration & Preprocessing
-        ↓
-YOLOv10 Meter Detection
-        ↓
-Meter Region
-        ↓
- ┌───────────────┬───────────────┐
- ↓                               ↓
-Odometer Branch              Pointer Branch
- ↓                               ↓
-YOLOv10 Digit Detection      Pointer Detection
- ↓                               ↓
-Digit CNN                    Pointer CNN
- ↓                               ↓
-Odometer Reading             Pointer Reading
- └───────────────┬─────────────┘
-                 ↓
-          Reading Synthesis
-                 ↓
-          Final Meter Reading
-                 ↓
-             GUI Display
+![Complete Raspberry Pi deployment workflow](raspberry_pi_deployment2.png.png)
+
+**Figure 1.** Complete system architecture and processing workflow of
+the automated water meter reading system deployed on Raspberry Pi 4
+Model B.
+
+## Raspberry Pi Application Interface
+
+The deployed system provides a graphical interface for capturing or
+uploading meter images, running inference, viewing detected meter
+regions, inspecting odometer and pointer results, and displaying the
+final automated reading.
+
+![Raspberry Pi meter reading interface](raspberry_pi_deployment.png)
+
+**Figure 2.** Raspberry Pi desktop application showing the automated
+water meter reading interface, detected regions, intermediate results,
+and final meter reading.
+
+## Main Deployment Components
+
+| File | Description |
+|---|---|
+| `camera.py` | Camera image acquisition |
+| `calibrate_camera.py` | Camera calibration |
+| `meter_pipeline.py` | Main detection and reading pipeline |
+| `desktop_app.py` | Graphical user interface |
+| `gui_utils.py` | GUI support functions |
+| `image_loader.py` | Image loading and preprocessing |
+| `convert_models.py` | Model conversion for deployment |
+| `launch_meter_reader.sh` | Application startup script |
+| `Meter_Reader.desktop` | Raspberry Pi desktop launcher |
+
+## Trained Models
+
+The deployment uses the trained models developed for the automated
+meter-reading system:
+
+- `General best.pt` – YOLOv10 global meter detection
+- `Odometer YOLO best.pt` – YOLOv10 odometer/digit localization
+- Digit CNN – odometer digit recognition
+- Pointer CNN – pointer-sector classification
+- ONNX models – optimized deployment versions where applicable
+
+## How to Run
+
+From the Raspberry Pi deployment directory:
+
+```bash
+bash launch_meter_reader.sh
